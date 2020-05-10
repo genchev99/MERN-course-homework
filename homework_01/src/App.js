@@ -1,26 +1,30 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  useRouteMatch,
+  useParams
+} from 'react-router-dom';
+import UsersContext from './contexts/users';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import Products from "./pages/products";
+
+export default class App extends React.Component {
+  render() {
+    return (
+      <Router>
+        <UsersContext.Provider>
+          {/* Todo place the nav here */}
+
+          <Switch>
+            <Route path='/users'>
+              <Products/>
+            </Route>
+          </Switch>
+        </UsersContext.Provider>
+      </Router>
+    );
+  }
 }
-
-export default App;
