@@ -6,7 +6,8 @@ import {
 } from 'react-router-dom';
 
 import UsersContext from './contexts/users';
-import Products from "./pages/recipes";
+import Users from './pages/users/'
+import Recipes from "./pages/recipes";
 
 const App = () => {
   const fetchLocalStorage = () => {
@@ -33,11 +34,11 @@ const App = () => {
   useEffect(() => {
     /* Updates the user from the local storage on load */
     /* Init local storage if undefined */
-    if (localStorage.getItem('users')) {
+    if (!localStorage.getItem('users')) {
       localStorage.setItem('users', '[]');
     }
 
-    if (localStorage.getItem('recipes')) {
+    if (!localStorage.getItem('recipes')) {
       localStorage.setItem('recipes', '[]');
     }
 
@@ -49,12 +50,13 @@ const App = () => {
       <UsersContext.Provider value={{
         data,
         createUser,
+        clearData,
       }}>
         {/* Todo place the nav here */}
 
         <Switch>
           <Route path='/users'>
-            <Products/>
+            <Users/>
           </Route>
         </Switch>
       </UsersContext.Provider>

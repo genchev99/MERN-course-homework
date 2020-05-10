@@ -10,7 +10,7 @@ export default class User {
     this.role = user.role;
     this.avatarUrl = user.avatarUrl;
     this.description = user.description;
-    this.status = user.status;
+    this.active = user.active;
     this.createdAt = new Date();
     this.updatedAt = new Date();
   }
