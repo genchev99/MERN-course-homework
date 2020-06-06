@@ -1,3 +1,6 @@
+require('dotenv').config({path: './.env'});
+
+const mongoose = require('mongoose');
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
@@ -38,7 +41,13 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-const port = process.env.PORT || 3000;
-app.listen(port);
+if (!process.env.DATABASE_URL) {
+  console.error('Please provide a database url in the .env file!');
+  process.exit(1);
+}
 
-console.log(`Express server listens on port: ${port}`);
+mongoose.connect(process.env.DATABASE_URL).then(() => {
+  const port = process.env.PORT || 3000;
+  app.listen(port);
+  console.log(`Express server listens on port: ${port}`);
+});
