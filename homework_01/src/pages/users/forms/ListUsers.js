@@ -7,7 +7,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import UsersContext from '../../../contexts/users';
+import UsersContext from '../../../contexts/data';
 
 const StyledTableCell = withStyles((theme) => ({
   head: {

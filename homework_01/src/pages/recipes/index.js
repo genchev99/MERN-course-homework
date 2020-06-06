@@ -1,11 +1,11 @@
 import React from 'react';
-import AddUser from './forms/AddUser';
+import AddRecipe from './forms/AddRecipe';
 
 const Products = () => {
   return (
     <div>
       <h1>Products</h1>
-      <AddUser/>
+      <AddRecipe/>
     </div>
   );
 };

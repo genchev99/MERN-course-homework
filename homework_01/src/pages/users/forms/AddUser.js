@@ -6,8 +6,8 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Switch from "@material-ui/core/Switch";
 import Button from "@material-ui/core/Button";
-import UsersContext from '../../../contexts/users';
-import User from "../../../contexts/users/user";
+import UsersContext from '../../../contexts/data';
+import User from "../../../contexts/data/user";
 
 export default function Users(props) {
   const {createUser} = useContext(UsersContext);

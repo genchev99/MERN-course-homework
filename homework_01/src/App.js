@@ -5,7 +5,7 @@ import {
   Route,
 } from 'react-router-dom';
 
-import UsersContext from './contexts/users';
+import UsersContext from './contexts/data';
 import Users from './pages/users/'
 import Recipes from "./pages/recipes";
 
@@ -14,6 +14,7 @@ const App = () => {
     return ({
       users: JSON.parse(localStorage.getItem('users')),
       recipes: JSON.parse(localStorage.getItem('recipes')),
+      assumed: localStorage.getItem('assumed'),
     });
   };
 
@@ -24,11 +25,19 @@ const App = () => {
   const clearData = () => {
     localStorage.setItem('users', '[]');
     localStorage.setItem('recipes', '[]');
+    localStorage.setItem('assumed', null);
   };
 
   const createUser = user => {
     localStorage.setItem('users', JSON.stringify([...data.users, user]));
     setData(fetchLocalStorage());
+  };
+
+  const assumeUser = _id => {
+    if (data.users.filter(({id}) => id === _id).length) {
+      localStorage.setItem('assumed', _id);
+      fetchLocalStorage();
+    }
   };
 
   useEffect(() => {
@@ -45,12 +54,14 @@ const App = () => {
     fetchLocalStorage();
   }, []);
 
+
   return (
     <Router>
       <UsersContext.Provider value={{
         data,
         createUser,
         clearData,
+        assumeUser,
       }}>
         {/* Todo place the nav here */}
 

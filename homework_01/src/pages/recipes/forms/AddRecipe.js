@@ -1,6 +1,6 @@
 import React, {useContext} from 'react';
-import UsersContext from '../../../contexts/users';
-import User from "../../../contexts/users/user";
+import UsersContext from '../../../contexts/data';
+import User from "../../../contexts/data/user";
 
 const AddUser = () => {
   const {createUser} = useContext(UsersContext);
