@@ -15,14 +15,14 @@ const userSchema = new mongoose.Schema({
     required: true,
     unique: true,
     maxlength: 15,
-    match: new RegExp(/[0-9a-zA-Z]*/),
+    match: /^[0-9a-zA-Z]*$/,
   },
   password: {
     type: String,
     default: null,
     required: true,
     minlength: 8,
-    match: new RegExp("^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{6,})")
+    match: /^(?=.*[a-z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])/
   },
   gender: {
     type: String,

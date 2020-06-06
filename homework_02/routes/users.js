@@ -16,7 +16,7 @@ router.get('/', async (req, res) => {
 router.post('/', async (req, res) => {
   try {
     const {_id} = await user.create(req.body);
-    res.status(201).location(`/users/${_id}`).send();
+    res.status(201).location(`/users/${_id}`).send(_id);
   } catch (e) {
     res.json({error: e.toString()});
   }
@@ -38,6 +38,10 @@ router.delete('/', async (req, res) => {
   } finally {
     res.send('Users collection successfully dropped!');
   }
+});
+
+router.get('/:userId', async (req, res) => {
+
 });
 
 module.exports = router;
