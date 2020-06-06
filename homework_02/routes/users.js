@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const user = require('../models/user');
+const recipe = require('../models/recipe');
 
 /* GET users listing. */
 router.get('/', async (req, res) => {
@@ -85,5 +86,20 @@ router.put('/:userId', async (req, res) => {
     res.status(400).json({error: `Invalid user ID: ${userId}`});
   }
 });
+
+router.get('/:userId/recipes', async (req, res) => {
+  const userId = req.params.userId;
+  const recipes = (await recipe.find({user: userId})).map(recipe => recipe.toObject());
+
+  res.json({...recipes});
+});
+
+router.post('/:userId/recipes', async (req, res) => {
+  const userId = req.params.userId;
+  const newRecipe = await recipe.create({...req.body, user: userId});
+
+  res.json({...newRecipe.toObject()});
+});
+
 
 module.exports = router;
