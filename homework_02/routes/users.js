@@ -7,7 +7,7 @@ const user = require('../models/user');
 router.get('/', async (req, res) => {
   const users = (await user.find()).map(user => user.toObject());
 
-  res.json({users});
+  res.json({...users});
 });
 
 /**
@@ -16,9 +16,10 @@ router.get('/', async (req, res) => {
 router.post('/', async (req, res) => {
   try {
     const {_id} = await user.create(req.body);
-    res.status(201).location(`/users/${_id}`).send(_id);
+    res.status(201).location(`/users/${_id}`).json({id: _id});
   } catch (e) {
-    res.json({error: e.toString()});
+    const status = e.code === 11000 ? 409 : 400;
+    res.status(status).json({error: e.toString()});
   }
 });
 
@@ -36,12 +37,53 @@ router.delete('/', async (req, res) => {
       throw e;
     }
   } finally {
-    res.send('Users collection successfully dropped!');
+    res.json({message: 'Users collection successfully dropped!'});
   }
 });
 
 router.get('/:userId', async (req, res) => {
+  const userId = req.params.userId;
+  try {
+    const userById = await user.findOne({_id: userId});
 
+    if (!userById) {
+      res.status(400).json({error: `Invalid user ID: ${userId}`});
+    } else {
+      res.json({...userById.toObject()});
+    }
+  } catch (e) {
+    res.status(400).json({error: `Invalid user ID: ${userId}`});
+  }
+});
+
+router.delete('/:userId', async (req, res) => {
+  const userId = req.params.userId;
+  try {
+    const userById = await user.findOneAndDelete({_id: userId}, {strict: true});
+
+    if (!userById) {
+      res.status(400).json({error: `Invalid user ID: ${userId}`});
+    } else {
+      res.json({...userById.toObject()});
+    }
+  } catch (e) {
+    res.status(400).json({error: `Invalid user ID: ${userId}`});
+  }
+});
+
+router.put('/:userId', async (req, res) => {
+  const userId = req.params.userId;
+  try {
+    const userById = await user.findOneAndUpdate({_id: userId}, req.body, {new: true});
+
+    if (!userById) {
+      res.status(400).json({error: `Invalid user ID: ${userId}`});
+    } else {
+      res.json({...userById.toObject()});
+    }
+  } catch (e) {
+    res.status(400).json({error: `Invalid user ID: ${userId}`});
+  }
 });
 
 module.exports = router;
