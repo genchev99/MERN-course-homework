@@ -98,8 +98,58 @@ router.post('/:userId/recipes', async (req, res) => {
   const userId = req.params.userId;
   const newRecipe = await recipe.create({...req.body, user: userId});
 
-  res.json({...newRecipe.toObject()});
+  res.status(201).location(`/users/${userId}/recipes/${newRecipe._id}`).json({...newRecipe.toObject()});
 });
 
+router.delete('/:userId/recipes/:recipeId', async (req, res) => {
+  const userId = req.params.userId;
+  const recipeId = req.params.recipeId;
+
+  try {
+    const recipeById = await recipe.findOneAndDelete({_id: recipeId, user: userId}, {strict: true});
+
+    if (!recipeById) {
+      res.status(400).json({error: `Invalid user or recipe IDs: user ID: ${userId}; recipe ID: ${recipeId}`});
+    } else {
+      res.json({...recipeById.toObject()});
+    }
+  } catch (e) {
+    res.status(400).json({error: `Invalid user or recipe IDs: user ID: ${userId}; recipe ID: ${recipeId}`});
+  }
+});
+
+router.put('/:userId/recipes/:recipeId', async (req, res) => {
+  const userId = req.params.userId;
+  const recipeId = req.params.recipeId;
+
+  try {
+    const recipeById = await recipe.findOneAndUpdate({_id: recipeId, user: userId}, req.body, {new: true});
+
+    if (!recipeById) {
+      res.status(400).json({error: `Invalid user or recipe IDs: user ID: ${userId}; recipe ID: ${recipeId}`});
+    } else {
+      res.json({...recipeById.toObject()});
+    }
+  } catch (e) {
+    res.status(400).json({error: `Invalid user or recipe IDs: user ID: ${userId}; recipe ID: ${recipeId}`});
+  }
+});
+
+router.get('/:userId/recipes/:recipeId', async (req, res) => {
+  const userId = req.params.userId;
+  const recipeId = req.params.recipeId;
+
+  try {
+    const recipeById = await recipe.findOne({_id: recipeId, user: userId});
+
+    if (!recipeById) {
+      res.status(400).json({error: `Invalid user or recipe IDs: user ID: ${userId}; recipe ID: ${recipeId}`});
+    } else {
+      res.json({...recipeById.toObject()});
+    }
+  } catch (e) {
+    res.status(400).json({error: `Invalid user or recipe IDs: user ID: ${userId}; recipe ID: ${recipeId}`});
+  }
+});
 
 module.exports = router;
