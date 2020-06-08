@@ -34,8 +34,8 @@ const userSchema = new mongoose.Schema({
     default: 'user',
     enum: ['user', 'admin'],
   },
-  avatarUrl: {
-    type: String,
+  avatar: {
+    type: mongoose.Schema.Types.Mixed,
     default: function() {
       return this.gender === 'male' ? 'male url here' : 'female url here'
     },

@@ -48,7 +48,7 @@ router.get('/:userId', async (req, res) => {
     const userById = await user.findOne({_id: userId});
 
     if (!userById) {
-      res.status(400).json({error: `Invalid user ID: ${userId}`});
+      res.status(404).json({error: `Invalid user ID: ${userId}`});
     } else {
       res.json({...userById.toObject()});
     }
@@ -63,7 +63,7 @@ router.delete('/:userId', async (req, res) => {
     const userById = await user.findOneAndDelete({_id: userId}, {strict: true});
 
     if (!userById) {
-      res.status(400).json({error: `Invalid user ID: ${userId}`});
+      res.status(404).json({error: `Invalid user ID: ${userId}`});
     } else {
       res.json({...userById.toObject()});
     }
@@ -75,15 +75,19 @@ router.delete('/:userId', async (req, res) => {
 router.put('/:userId', async (req, res) => {
   const userId = req.params.userId;
   try {
-    const userById = await user.findOneAndUpdate({_id: userId}, req.body, {new: true});
+    const userById = await user.findOneAndUpdate({_id: userId}, req.body, {new: true, runValidators: true});
 
     if (!userById) {
-      res.status(400).json({error: `Invalid user ID: ${userId}`});
+      res.status(404).json({error: `Invalid user ID: ${userId}`});
     } else {
       res.json({...userById.toObject()});
     }
   } catch (e) {
-    res.status(400).json({error: `Invalid user ID: ${userId}`});
+    if (e.kind === 'ObjectId') {
+      res.status(400).json({error: `Invalid user ID: ${userId}`});
+    } else {
+      res.status(400).json({error: e.toString()});
+    }
   }
 });
 
@@ -109,7 +113,7 @@ router.delete('/:userId/recipes/:recipeId', async (req, res) => {
     const recipeById = await recipe.findOneAndDelete({_id: recipeId, user: userId}, {strict: true});
 
     if (!recipeById) {
-      res.status(400).json({error: `Invalid user or recipe IDs: user ID: ${userId}; recipe ID: ${recipeId}`});
+      res.status(404).json({error: `Invalid user or recipe IDs: user ID: ${userId}; recipe ID: ${recipeId}`});
     } else {
       res.json({...recipeById.toObject()});
     }
@@ -123,15 +127,19 @@ router.put('/:userId/recipes/:recipeId', async (req, res) => {
   const recipeId = req.params.recipeId;
 
   try {
-    const recipeById = await recipe.findOneAndUpdate({_id: recipeId, user: userId}, req.body, {new: true});
+    const recipeById = await recipe.findOneAndUpdate({_id: recipeId, user: userId}, req.body, {new: true, runValidators: true});
 
     if (!recipeById) {
-      res.status(400).json({error: `Invalid user or recipe IDs: user ID: ${userId}; recipe ID: ${recipeId}`});
+      res.status(404).json({error: `Invalid user or recipe IDs: user ID: ${userId}; recipe ID: ${recipeId}`});
     } else {
       res.json({...recipeById.toObject()});
     }
   } catch (e) {
-    res.status(400).json({error: `Invalid user or recipe IDs: user ID: ${userId}; recipe ID: ${recipeId}`});
+    if (e.kind === 'ObjectId') {
+      res.status(400).json({error: `Invalid user or recipe IDs: user ID: ${userId}; recipe ID: ${recipeId}`});
+    } else {
+      res.status(400).json({error: e.toString()});
+    }
   }
 });
 
@@ -143,7 +151,7 @@ router.get('/:userId/recipes/:recipeId', async (req, res) => {
     const recipeById = await recipe.findOne({_id: recipeId, user: userId});
 
     if (!recipeById) {
-      res.status(400).json({error: `Invalid user or recipe IDs: user ID: ${userId}; recipe ID: ${recipeId}`});
+      res.status(404).json({error: `Invalid user or recipe IDs: user ID: ${userId}; recipe ID: ${recipeId}`});
     } else {
       res.json({...recipeById.toObject()});
     }

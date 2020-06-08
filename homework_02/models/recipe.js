@@ -21,7 +21,7 @@ const recipeSchema = new mongoose.Schema({
     default: [],
   },
   resultImage: {
-    type: String,
+    type: mongoose.Schema.Types.Mixed,
     required: true,
   },
   inDepthDescription: {
